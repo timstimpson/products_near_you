@@ -176,12 +176,11 @@
         type: 'GET',
         contentType: "application/json; charset=utf-8",
         success: function(data) {
-          console.log(cb)
-        cb(null, data)
+        console.log(data)
+
 
         },
         error: function(data) {
-        cb('No products found', data)
         },
       });      
     };
