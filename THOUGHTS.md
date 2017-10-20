@@ -1,6 +1,6 @@
 1. How would your design change if the data was not static (i.e updated frequently
 during the day)?
-From a design perspective and if the data was not static I would look to use an RDD package such as Apache Spark to set up the map and reduce dataset functions that Pandas is currently performing on the csv format static data.
+From a design perspective and if the data was not static I would look to use an RDD package such as Apache Spark to set up the map and reduce dataset functions that Pandas is currently performing on the csv format static data. The io operations and csv conversion would also causes an overhead, which a RAM based datastructure would reduce.
 
 2. Do you think your design can handle 1000 concurrent requests per second? If not, what
 would you change?
