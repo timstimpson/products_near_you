@@ -3,6 +3,7 @@ import pandas as pd
 from flask import Blueprint, current_app, jsonify, json, request, Response
 from flask_cors import CORS, cross_origin
 from geopy.distance import great_circle
+from datetime import datetime
 
 api = Blueprint('api', __name__)
 #  Wrap the API in the CORS module to allow x-domain access for the dual servers
@@ -12,12 +13,13 @@ CORS(api)
 def data_path(filename):
     data_path = current_app.config['DATA_PATH']
     return u"%s/%s" % (data_path, filename)
-    
+
 
 @api.route('/search', methods=['GET'])
 @cross_origin()
 def search():
 
+    start_time = datetime.now()
     #  Create a preferences object by reading the request arguments and converting using an eval functions
     preferences = eval(request.args.keys()[0])
     #  Create tuple var of current location for use with the great circle function
@@ -49,6 +51,8 @@ def search():
     mergedProducts = pd.merge(mergedShops, products, left_on='id_y', right_on='shop_id', how='inner')
     #  remove zero quantity and sort dataframe against popularity
     mergedProducts = mergedProducts[mergedProducts['quantity'] != 0].sort_values('popularity', ascending=False)[:preferences['count']]
+    end_time = datetime.now()
+    print('{0}:\t complete: secs: {1:.10f}'.format('database_release', (end_time-start_time).microseconds))
 
     #  return the data to the client
     return jsonify({'products': [data['title'] for index,data in mergedProducts.iterrows()]})
